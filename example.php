@@ -7,7 +7,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $connection = new Connection(new Client());
 
-/** @var \Turk\TcpLighting\Room[] $rooms */
-$rooms = $connection->getRooms();
+$items = $connection->getRooms();
 
-$rooms['Living Room 2']->setBrightness(1)->setPower(true);
+for ($i = 10; $i > 0; $i--) {
+	$items['Living Room 2']->setBrightness(rand(1, 30));
+}

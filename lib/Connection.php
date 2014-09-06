@@ -25,14 +25,33 @@ class Connection
 		$url = $this->host . $this->endpoint;
 		$res = $this->client->post($url, ['body' => ['cmd' => $command, 'data' => $data, 'fmt' => 'json']]);
 
-		echo $res . PHP_EOL . PHP_EOL;
-
 		return $res->xml();
 	}
 
+	/**
+	 * @return Device[]
+	 */
+	public function getDevices()
+	{
+		$data     = '<gwrcmds><gwrcmd><gcmd>RoomGetCarousel</gcmd><gdata><gip><version>1</version><token>1234567890</token><fields>name,image,imageurl,control,power,product,class,realtype,status</fields></gip></gdata></gwrcmd></gwrcmds>';
+		$response = $this->call('GWRBatch', $data);
+
+		$devices = [];
+		foreach ($response->gwrcmd->gdata->gip->room as $node) {
+			foreach ($node->device as $device) {
+				$devices[(string)$device->name] = new Device($this, (int)$device->did, (string)$device->name);
+			}
+		}
+
+		return $devices;
+	}
+
+	/**
+	 * @return Room[]
+	 */
 	public function getRooms()
 	{
-		$data     = '<gwrcmds><gwrcmd><gcmd>RoomGetCarousel</gcmd><gdata><gip><version>1</version><token>1234567890</token><fields>name,image,imageurl,control,power,product,class,realtype,status</fields></gip></gdata></gwrcmd><gwrcmd><gcmd>UserGetListDefaultRooms</gcmd><gdata><gip><version>1</version><token>1234567890</token></gip></gdata></gwrcmd><gwrcmd><gcmd>UserGetListDefaultColors</gcmd><gdata><gip><version>1</version><token>1234567890</token></gip></gdata></gwrcmd></gwrcmds>';
+		$data     = '<gwrcmds><gwrcmd><gcmd>RoomGetCarousel</gcmd><gdata><gip><version>1</version><token>1234567890</token><fields>name,image,imageurl,control,power,product,class,realtype,status</fields></gip></gdata></gwrcmd></gwrcmds>';
 		$response = $this->call('GWRBatch', $data);
 
 		$rooms = [];
