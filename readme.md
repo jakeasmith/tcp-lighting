@@ -49,4 +49,4 @@ $devices = $connection->getDevices();
 // Turn off the desk lamp
 $devices['Desk Lamp']->setPower(false);
 
-``
+```
