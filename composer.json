@@ -1,0 +1,20 @@
+{
+	"name": "turk/tcp-lighting",
+	"description": "TCP Lighting API",
+	"minimum-stability": "dev",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jake A. Smith",
+			"email": "theman@jakeasmith.com"
+		}
+	],
+	"require": {
+		"guzzlehttp/guzzle": "4.2.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Turk\\TcpLighting\\": "lib/"
+		}
+	}
+}
