@@ -6,9 +6,12 @@ use Turk\TcpLighting\Connection;
 require __DIR__ . '/vendor/autoload.php';
 
 $connection = new Connection(new Client());
+$connection->setHost('192.168.0.21');
 
-$items = $connection->getRooms();
+$items  = $connection->getDevices();
+$device = $items['Right'];
 
-for ($i = 10; $i > 0; $i--) {
-	$items['Living Room 2']->setBrightness(rand(1, 30));
-}
+$lmu      = __DIR__ . '/lmutracker';
+$ambiance = new \Turk\TcpLighting\AmbientSetting($device, $lmu, 75000);
+
+$ambiance->run();

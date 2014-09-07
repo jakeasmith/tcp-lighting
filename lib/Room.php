@@ -4,6 +4,9 @@ namespace Turk\TcpLighting;
 
 class Room implements DeviceControlInterface
 {
+	/** @var int Brightness */
+	private $brightness = null;
+
 	/** @var Connection */
 	private $connection;
 
@@ -26,6 +29,21 @@ class Room implements DeviceControlInterface
 	public function addDevice(Device $device)
 	{
 		$this->devices[$device->getName()] = $device;
+	}
+
+	public function getBrightness()
+	{
+		$brightness = $this->brightness;
+		if ($this->brightness === null) {
+			$brightness = 0;
+			foreach ($this->devices as $device) {
+				$brightness += $device->getBrightness();
+			}
+
+			$brightness = round($brightness / count($this->devices));
+		}
+
+		return $brightness;
 	}
 
 	/**
@@ -67,6 +85,7 @@ class Room implements DeviceControlInterface
 	{
 		$data = '<gip><version>1</version><token>1234567890</token><rid>' . $this->id . '</rid><value>' . $level . '</value><type>level</type></gip>';
 		$this->connection->call('RoomSendCommand', $data);
+		$this->brightness = $level;
 
 		return $this;
 	}

@@ -39,7 +39,12 @@ class Connection
 		$devices = [];
 		foreach ($response->gwrcmd->gdata->gip->room as $node) {
 			foreach ($node->device as $device) {
-				$devices[(string)$device->name] = new Device($this, (int)$device->did, (string)$device->name);
+				$devices[(string)$device->name] = new Device(
+					$this,
+					(int)$device->did,
+					(string)$device->name,
+					(int)$device->level
+				);
 			}
 		}
 
@@ -59,12 +64,17 @@ class Connection
 		foreach ($nodes as $node) {
 			$room = new Room($this, (int)$node->rid, (string)$node->name);
 			foreach ($node->device as $device) {
-				$room->addDevice(new Device($this, (int)$device->did, (string)$device->name));
+				$room->addDevice(new Device($this, (int)$device->did, (string)$device->name, (int)$device->level));
 			}
 
 			$rooms[(string)$node->name] = $room;
 		}
 
 		return $rooms;
+	}
+
+	public function setHost($host)
+	{
+		$this->host = $host;
 	}
 }

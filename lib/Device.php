@@ -4,6 +4,9 @@ namespace Turk\TcpLighting;
 
 class Device implements DeviceControlInterface
 {
+	/** @var int Current brightness level */
+	private $brightness;
+
 	/** @var Connection Connection object */
 	private $connection;
 
@@ -13,11 +16,22 @@ class Device implements DeviceControlInterface
 	/** @var string Device name */
 	private $name;
 
-	public function __construct(Connection $connection, $id, $name = null)
+	public function __construct(Connection $connection, $id, $name = null, $brightness = null)
 	{
+		$this->brightness = $brightness;
 		$this->connection = $connection;
 		$this->id         = $id;
-		$this->name = $name;
+		$this->name       = $name;
+	}
+
+	public function getBrightness()
+	{
+		return $this->brightness;
+	}
+
+	public function getId()
+	{
+		return $this->id;
 	}
 
 	public function getName()
@@ -25,24 +39,20 @@ class Device implements DeviceControlInterface
 		return $this->name;
 	}
 
-	public function setPower($status)
-	{
-		$data = '<gip><version>1</version><token>1234567890</token><did>' . $this->id . '</did><value>' . (int) $status . '</value></gip>';
-		$this->connection->call('DeviceSendCommand', $data);
-
-		return $this;
-	}
-
 	public function setBrightness($level)
 	{
 		$data = '<gip><version>1</version><token>1234567890</token><did>216443150309790617</did><value>' . $level . '</value><type>level</type></gip>';
 		$this->connection->call('DeviceSendCommand', $data);
+		$this->brightness = $level;
 
 		return $this;
 	}
 
-	public function getId()
+	public function setPower($status)
 	{
-		return $this->id;
+		$data = '<gip><version>1</version><token>1234567890</token><did>' . $this->id . '</did><value>' . (int)$status . '</value></gip>';
+		$this->connection->call('DeviceSendCommand', $data);
+
+		return $this;
 	}
 }

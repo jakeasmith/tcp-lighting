@@ -5,6 +5,11 @@ namespace Turk\TcpLighting;
 interface DeviceControlInterface
 {
 	/**
+	 * @return int
+	 */
+	public function getBrightness();
+
+	/**
 	 * @param int $level
 	 * @return $this
 	 */
